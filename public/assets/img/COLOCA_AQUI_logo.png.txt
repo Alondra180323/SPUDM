@@ -1,0 +1,2 @@
+Coloca aquí tu archivo real llamado exactamente: logo.png
+Ruta final: public/assets/img/logo.png
