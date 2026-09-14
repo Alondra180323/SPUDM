@@ -80,6 +80,61 @@ final class UserModel
         ];
     }
 
+
+
+    /**
+     * Trabajadores/usuarios activos disponibles para asignar a una solicitud.
+     */
+    public function activeWorkers(): array
+    {
+        $sql = "SELECT
+                    ID_USUARIO_SPUDM AS id,
+                    NOMBRE_USUARIO AS nombre,
+                    APELLIDOS_USUARIO AS apellidos,
+                    NUMERO_TRABAJADOR_USUARIO AS numero_trabajador,
+                    NUMERO_TELEFONO_USUARIO AS telefono,
+                    ID_CLIENTE_USUARIO AS cliente_id,
+                    ID_AREA_USUARIO AS area_id
+                FROM tbl_usuarios_spudm
+                WHERE ID_ESTATUS_USUARIO = :estatus_activo
+                ORDER BY NOMBRE_USUARIO ASC, APELLIDOS_USUARIO ASC";
+
+        $stmt = Database::connection()->prepare($sql);
+        $stmt->execute([
+            'estatus_activo' => (int) app_config('users.active_status_id'),
+        ]);
+
+        return $stmt->fetchAll();
+    }
+
+    /**
+     * Obtiene un trabajador específico y confirma que continúe activo.
+     */
+    public function findActiveWorkerById(int $workerId): ?array
+    {
+        $sql = "SELECT
+                    ID_USUARIO_SPUDM AS id,
+                    NOMBRE_USUARIO AS nombre,
+                    APELLIDOS_USUARIO AS apellidos,
+                    NUMERO_TRABAJADOR_USUARIO AS numero_trabajador,
+                    NUMERO_TELEFONO_USUARIO AS telefono,
+                    ID_CLIENTE_USUARIO AS cliente_id,
+                    ID_AREA_USUARIO AS area_id
+                FROM tbl_usuarios_spudm
+                WHERE ID_USUARIO_SPUDM = :id
+                  AND ID_ESTATUS_USUARIO = :estatus_activo
+                LIMIT 1";
+
+        $stmt = Database::connection()->prepare($sql);
+        $stmt->execute([
+            'id' => $workerId,
+            'estatus_activo' => (int) app_config('users.active_status_id'),
+        ]);
+
+        $row = $stmt->fetch();
+        return $row ?: null;
+    }
+
     /**
      * Si el usuario fue capturado manualmente con contraseña en texto plano,
      * al iniciar sesión correctamente se actualiza automáticamente a password_hash().

@@ -6,6 +6,7 @@ namespace App\Core;
 
 use App\Middleware\AuthMiddleware;
 use App\Middleware\GuestMiddleware;
+use App\Middleware\PermissionMiddleware;
 use App\Middleware\RoleMiddleware;
 
 final class Router
@@ -67,6 +68,11 @@ final class Router
         if (str_starts_with($middleware, 'role:')) {
             $roles = array_filter(array_map('trim', explode(',', substr($middleware, 5))));
             (new RoleMiddleware($roles))->handle();
+            return;
+        }
+
+        if (str_starts_with($middleware, 'permission:')) {
+            (new PermissionMiddleware(trim(substr($middleware, 11))))->handle();
         }
     }
 

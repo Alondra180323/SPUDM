@@ -1,107 +1,61 @@
-# SPUDM — Starter MVC
+# SPUDM v7 - Registro conectado a `tbl_solicitud_spudm`
 
-Base inicial para **SPUDM (Sistema de Programación de Unidades)** orientado a una empresa de transportes.
+Esta versión usa la tabla real proporcionada:
 
-## Qué incluye
+- `tbl_solicitud_spudm`
+- `tbl_usuarios_spudm`
 
-- Arquitectura MVC sin exponer `/app` al navegador.
-- `public/` como DocumentRoot y Front Controller.
-- Login con usuario y contraseña.
-- `password_verify()` para contraseñas seguras.
-- Protección CSRF.
-- Sesiones con cookie HttpOnly / SameSite=Lax.
-- Roles: `administrador`, `supervisor`, `laborales`, `programacion`.
-- Permisos configurables por rol.
-- Dashboard distinto por rol.
-- Diseño empresarial azul rey + blanco, responsive y orientado a transporte.
-- Logo esperado en `public/assets/img/logo.png`.
+## Qué guarda el formulario
 
-## Estructura
+Al registrar una solicitud:
 
-```text
-SPUDM/
-├─ app/
-│  ├─ config/
-│  ├─ controllers/
-│  ├─ core/
-│  ├─ helpers/
-│  ├─ middleware/
-│  ├─ models/
-│  ├─ services/
-│  └─ views/
-├─ public/
-│  ├─ assets/
-│  ├─ .htaccess
-│  └─ index.php
-├─ storage/logs/
-├─ .env.example
-└─ README.md
+- `FOLIO_SOLICITUD`: se genera automáticamente.
+- `FOLIO_VIAJE`: `NULL` hasta que exista un viaje programado.
+- `ID_TIPO_MOVIMIENTO`: `NULL` por ahora; todavía no se definió su catálogo.
+- `ID_TIPO_PROGRAMA`: Único/Fijo, mediante IDs configurables en `.env`.
+- `ID_CLIENTE`: se toma del usuario que inició sesión.
+- `ID_AREA`: se toma del usuario que inició sesión.
+- `ID_TRABAJADOR`: trabajador activo seleccionado en Select2.
+- `ID_ORIGEN`: valor capturado en Origen.
+- `ID_DESTINO`: valor capturado en Destino.
+- `ID_ESTATUS_SOLICITUD`: Pendiente al crear.
+- `unidad_asignada`: `NULL` al crear.
+- `ID_USUARIO_LABORALES`: `NULL` al crear.
+- `ID_USUARIO_PROGRAMACION`: `NULL` al crear.
+- `ID_USUARIO_SOLICITANTE`: usuario autenticado.
+- `FECHA_CREACION_CREACION`: fecha actual.
+- `HORA_CREACION_SOLICITUD`: hora actual.
+
+Los campos de entrada/salida, vencimiento y cancelación permanecen `NULL` hasta la etapa correspondiente.
+
+## Configuración de IDs
+
+Copia `.env.example` a `.env` y confirma los IDs reales:
+
+```env
+ACTIVE_USER_STATUS_ID=1
+
+SOLICITUD_STATUS_PENDIENTE_ID=1
+SOLICITUD_STATUS_ESPERA_ID=2
+SOLICITUD_STATUS_PROGRAMADA_ID=3
+SOLICITUD_STATUS_REALIZADA_ID=4
+SOLICITUD_STATUS_CANCELADA_ID=5
+SOLICITUD_STATUS_VENCIDA_ID=6
+
+SOLICITUD_TIPO_PROGRAMA_UNICO_ID=1
+SOLICITUD_TIPO_PROGRAMA_FIJO_ID=2
 ```
 
-## Instalación rápida
+Si tus catálogos usan otros IDs, cambia solamente estos valores.
 
-1. Copia el proyecto en tu servidor local.
-2. Configura Apache para que el **DocumentRoot apunte a `SPUDM/public`**.
-3. Copia `.env.example` como `.env` y coloca los datos reales de tu BD.
-4. Copia el logo de la empresa a:
-   `public/assets/img/logo.png`
-5. Ajusta **únicamente** la consulta de `app/models/UserModel.php` a tus tablas reales.
-6. Asegúrate de guardar las contraseñas con `password_hash()`.
+## ID_SOLICITUD
 
-## Consulta que espera el login
+La definición compartida no muestra `PRIMARY KEY AUTO_INCREMENT` en `ID_SOLICITUD`.
+El código incluye compatibilidad temporal para calcular el siguiente ID, pero para producción es recomendable ejecutar:
 
-El ejemplo actual supone:
+`database/03_ajustar_id_solicitud.sql`
 
-- `tbl_usuarios.id_usuario`
-- `tbl_usuarios.usuario`
-- `tbl_usuarios.password`
-- `tbl_usuarios.nombre`
-- `tbl_usuarios.id_rol`
-- `tbl_usuarios.activo`
-- `tbl_roles.id_rol`
-- `tbl_roles.nombre`
+## Origen y Destino
 
-Si tu BD usa otros nombres, cambia solo `UserModel::findByUsername()`.
-
-## Roles reconocidos
-
-- Administrador
-- Supervisor
-- Laborales
-- Programación
-
-El nombre del rol se normaliza internamente a:
-
-- `administrador`
-- `supervisor`
-- `laborales`
-- `programacion`
-
-## Siguiente etapa recomendada
-
-1. Catálogo de usuarios y permisos.
-2. Módulo de solicitudes.
-3. Flujo Supervisor → Laborales → Programación.
-4. Catálogo de vehículos/unidades.
-5. Programación y asignación.
-6. Histórico, estatus y trazabilidad.
-7. Dashboard con métricas reales.
-
-## Login conectado a tbl_usuarios_spudm
-
-El login ya consulta directamente `tbl_usuarios_spudm`.
-
-El campo Usuario acepta actualmente:
-- `NUMERO_TRABAJADOR_USUARIO`
-- `EMAIL_USUARIO`
-- `NOMBRE_USUARIO`
-
-La contraseña se compara contra `PASSWORD_USUARIO`. Si fue insertada temporalmente en texto plano, al primer inicio correcto se convierte automáticamente usando `password_hash()`.
-
-Asignación temporal de roles hasta conectar la tabla real de roles:
-- 1 = Administrador
-- 2 = Supervisor
-- 3 = Laborales
-- 4 = Programación
-
-Si `ID_ROL_USUARIO` contiene otro valor, por seguridad se usa el perfil Supervisor de manera temporal.
+La tabla define `ID_ORIGEN` e `ID_DESTINO` como `INT`. Por eso esta versión captura IDs numéricos.
+Cuando se proporcionen las tablas/catálogos reales de origen y destino, estos dos campos pueden convertirse a Select2 mostrando nombres y guardando sus IDs.

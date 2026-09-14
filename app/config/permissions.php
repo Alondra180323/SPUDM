@@ -9,6 +9,7 @@ return [
         'solicitudes.ver',
         'solicitudes.crear',
         'solicitudes.editar',
+        'solicitudes.validar',
     ],
     'laborales' => [
         'dashboard.ver',

@@ -1,33 +1,7 @@
 <div class="container-fluid min-vh-100 p-0">
-    <div class="row g-0 min-vh-100 flex-lg-row-reverse">
-        <div class="col-lg-7 d-none d-lg-flex login-visual position-relative overflow-hidden">
-            <div class="transport-lines"></div>
-
-            <div class="transport-scene">
-                <div class="scene-glow"></div>
-                <div class="road-base"></div>
-                <div class="road-lane lane-1"></div>
-                <div class="road-lane lane-2"></div>
-                <div class="city-shadow city-1"></div>
-                <div class="city-shadow city-2"></div>
-                <div class="city-shadow city-3"></div>
-
-                <div class="car-animation" aria-hidden="true">
-                    <div class="car-body">
-                        <div class="car-top"></div>
-                        <div class="car-window car-window-front"></div>
-                        <div class="car-window car-window-back"></div>
-                        <div class="car-light car-light-front"></div>
-                        <div class="car-light car-light-back"></div>
-                    </div>
-                    <div class="wheel wheel-front"></div>
-                    <div class="wheel wheel-back"></div>
-                    <div class="car-shadow"></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-5 d-flex align-items-center bg-white">
+    <div class="row g-0 min-vh-100 login-layout">
+        <!-- Login: izquierda en escritorio, arriba en móvil -->
+        <div class="col-12 col-lg-5 d-flex align-items-center bg-white login-column">
             <div class="login-panel w-100">
                 <div class="text-center mb-4">
                     <div class="login-logo mx-auto mb-4 login-logo-plain">
@@ -68,6 +42,34 @@
                 </form>
 
                 <div class="text-center text-secondary small mt-4">© <?= date('Y') ?> Transportes</div>
+            </div>
+        </div>
+
+        <!-- Animación: derecha en escritorio, debajo del login en móvil -->
+        <div class="col-12 col-lg-7 d-flex login-visual position-relative overflow-hidden">
+            <div class="transport-lines"></div>
+
+            <div class="transport-scene">
+                <div class="scene-glow"></div>
+                <div class="road-base"></div>
+                <div class="road-lane lane-1"></div>
+                <div class="road-lane lane-2"></div>
+                <div class="city-shadow city-1"></div>
+                <div class="city-shadow city-2"></div>
+                <div class="city-shadow city-3"></div>
+
+                <div class="car-animation" aria-hidden="true">
+                    <div class="car-body">
+                        <div class="car-top"></div>
+                        <div class="car-window car-window-front"></div>
+                        <div class="car-window car-window-back"></div>
+                        <div class="car-light car-light-front"></div>
+                        <div class="car-light car-light-back"></div>
+                    </div>
+                    <div class="wheel wheel-front"></div>
+                    <div class="wheel wheel-back"></div>
+                    <div class="car-shadow"></div>
+                </div>
             </div>
         </div>
     </div>

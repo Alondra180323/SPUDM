@@ -1,0 +1,237 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 14-09-2026 a las 22:22:02
+-- Versión del servidor: 10.4.32-MariaDB
+-- Versión de PHP: 8.2.12
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Base de datos: `spudm`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tbl_area_spudm`
+--
+
+CREATE TABLE `tbl_area_spudm` (
+  `ID_AREA_SPUDM` int(11) NOT NULL,
+  `NOMBRE_AREA_SPUDM` varchar(25) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `NOMBRE_ENCARGADO AREA` varchar(35) NOT NULL,
+  `ID_CLIENTE_SIDMC` int(11) NOT NULL,
+  `FECHA_CREACION_AREA_SPUDM` varchar(25) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `FECHA_HORA_ACTUALIZACION_AREA_SPUDM` varchar(25) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `ID_CREADOR_AREA_SPUDM` int(11) DEFAULT NULL,
+  `ID_USUARIO_ACTUALIZACION_AREA_SPUDM` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tbl_direccion_trabajador_spudm`
+--
+
+CREATE TABLE `tbl_direccion_trabajador_spudm` (
+  `ID_DIRECCION_TRABAJADOR` int(11) NOT NULL,
+  `CODIGO_POSTAL_DIRECCION` varchar(6) DEFAULT NULL,
+  `CALLE_TRABAJADOR` varchar(45) DEFAULT NULL,
+  `NUMERO_TRABAJADOR` varchar(45) DEFAULT NULL,
+  `COLONIA_TRABAJADOR` varchar(45) DEFAULT NULL,
+  `CIUDAD_TRABAJADOR` varchar(45) DEFAULT NULL,
+  `ESTADO_TRABAJADOR` varchar(45) DEFAULT NULL,
+  `REFERENCIA_TRABAJADOR` varchar(45) DEFAULT NULL,
+  `LINK_GOOGLE_MAPS` varchar(95) DEFAULT NULL,
+  `LATITUD` varchar(35) DEFAULT NULL,
+  `LONGITUD` varchar(35) DEFAULT NULL,
+  `ID_TRABAJADOR` int(11) DEFAULT NULL,
+  `FECHA_HORA_CREACION_TRABAJADOR` varchar(25) DEFAULT NULL,
+  `FECHA_HORA_ACTUALIZACION_TRABAJADOR` varchar(35) DEFAULT NULL,
+  `ID_USUARIO_CREADOR_TRABAJADOR` int(11) DEFAULT NULL,
+  `ID_USUARIO_ACTUALIZACION_TRABAJADOR` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tbl_solicitud_spudm`
+--
+
+CREATE TABLE `tbl_solicitud_spudm` (
+  `ID_SOLICITUD` int(11) NOT NULL,
+  `FOLIO_SOLICITUD` varchar(111) DEFAULT NULL,
+  `FOLIO_VIAJE` varchar(111) DEFAULT NULL,
+  `ID_TIPO_MOVIMIENTO` int(11) DEFAULT NULL,
+  `ID_TIPO_PROGRAMA` int(11) DEFAULT NULL,
+  `ID_CLIENTE` int(11) DEFAULT NULL,
+  `ID_AREA` int(11) DEFAULT NULL,
+  `ID_TRABAJADOR` int(11) DEFAULT NULL,
+  `ID_ORIGEN` int(11) DEFAULT NULL,
+  `ID_DESTINO` int(11) DEFAULT NULL,
+  `ID_ESTATUS_SOLICITUD` int(11) DEFAULT NULL,
+  `unidad_asignada` varchar(11) DEFAULT NULL,
+  `ID_USUARIO_LABORALES` int(11) DEFAULT NULL,
+  `ID_USUARIO_PROGRAMACION` int(11) DEFAULT NULL,
+  `ID_USUARIO_SOLICITANTE` int(11) DEFAULT NULL,
+  `FECHA_ENTRADA` date DEFAULT NULL,
+  `HORA_ENTRADA` time DEFAULT NULL,
+  `FECHA_SALIDA` date DEFAULT NULL,
+  `HORA_SALIDA` time DEFAULT NULL,
+  `FECHA_CREACION_CREACION` date DEFAULT NULL,
+  `HORA_CREACION_SOLICITUD` time DEFAULT NULL,
+  `FECHA_ACTUALIZACION_SOLICITUD_LABORALES` date DEFAULT NULL,
+  `HORA_ACTUALIZACION_SOLICITUD_LABORALES` time DEFAULT NULL,
+  `FECHA_VENCIMIENTO_SOLICITUD` date DEFAULT NULL,
+  `HORA_VENCIMIENTO_SOLICITUD` time DEFAULT NULL,
+  `COMENTARIO_CANCELACION` varchar(255) DEFAULT NULL,
+  `FECHA_CANCELACION` date DEFAULT NULL,
+  `HORA_CANCELACION` time DEFAULT NULL,
+  `ID_USUARIO_CANCELACION` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tbl_trabajadores_spudm`
+--
+
+CREATE TABLE `tbl_trabajadores_spudm` (
+  `ID_TRABAJADOR_SPUDM` int(11) NOT NULL,
+  `NOMBRE_TRABAJADOR_SPUDM` varchar(35) DEFAULT NULL,
+  `APELLIDOS_TRABAJADOR_SPUDM` varchar(35) DEFAULT NULL,
+  `TELEFONO_TRABAJADOR_SPUDM` varchar(15) DEFAULT NULL,
+  `NUMERO_TRABAJADOR_SPUDM` varchar(15) DEFAULT NULL,
+  `ID_CLIENTE_SIDMC` int(11) DEFAULT NULL,
+  `ID_AREA_SPUDM` int(11) DEFAULT NULL,
+  `ID_ESTATUS_SPUDM` int(11) DEFAULT NULL,
+  `FECHA_HORA_CREACION_TRABAJADOR_SPUDM` varchar(22) DEFAULT NULL,
+  `FECHA_HORA_ACTUALIZACION_TRABAJADOR_SPUDM` varchar(20) DEFAULT NULL,
+  `ID_CREADOR_TRABAJADOR_SPUDM` int(11) DEFAULT NULL,
+  `ID_USUARIO_ACTUALIZACION_SPUDM` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `tbl_trabajadores_spudm`
+--
+
+INSERT INTO `tbl_trabajadores_spudm` (`ID_TRABAJADOR_SPUDM`, `NOMBRE_TRABAJADOR_SPUDM`, `APELLIDOS_TRABAJADOR_SPUDM`, `TELEFONO_TRABAJADOR_SPUDM`, `NUMERO_TRABAJADOR_SPUDM`, `ID_CLIENTE_SIDMC`, `ID_AREA_SPUDM`, `ID_ESTATUS_SPUDM`, `FECHA_HORA_CREACION_TRABAJADOR_SPUDM`, `FECHA_HORA_ACTUALIZACION_TRABAJADOR_SPUDM`, `ID_CREADOR_TRABAJADOR_SPUDM`, `ID_USUARIO_ACTUALIZACION_SPUDM`) VALUES
+(8, 'Sonia Zulema ', 'Garcia Franco', '8445903221', '4870', 37, 2, 1, '2022-06-02 / 17:55', '', 7, NULL),
+(9, 'Francisco Javier', 'Martinez Carmona ', '8444978748', '5340', 37, 2, 1, '2022-06-06 / 13:57', '', 7, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tbl_usuarios_spudm`
+--
+
+CREATE TABLE `tbl_usuarios_spudm` (
+  `ID_USUARIO_SPUDM` int(11) NOT NULL,
+  `NOMBRE_USUARIO` varchar(35) DEFAULT NULL,
+  `APELLIDOS_USUARIO` varchar(35) DEFAULT NULL,
+  `NUMERO_TELEFONO_USUARIO` varchar(35) DEFAULT NULL,
+  `NUMERO_TRABAJADOR_USUARIO` varchar(35) DEFAULT NULL,
+  `ID_CLIENTE_USUARIO` int(11) DEFAULT NULL,
+  `ID_AREA_USUARIO` int(11) DEFAULT NULL,
+  `ID_ESTATUS_USUARIO` int(11) DEFAULT NULL,
+  `ID_ROL_USUARIO` int(11) DEFAULT NULL,
+  `EMAIL_USUARIO` varchar(50) DEFAULT NULL,
+  `PASSWORD_USUARIO` varchar(150) DEFAULT NULL,
+  `GERENTE_AREA` varchar(55) DEFAULT NULL,
+  `RUTA_FOTO_USUARIO` varchar(150) DEFAULT NULL,
+  `FECHA_CREACION_USUARIO` varchar(25) DEFAULT NULL,
+  `FECHA_ACTUALIZACION_USUARIO` varchar(25) DEFAULT NULL,
+  `ID_USUARIO_CREADOR` int(11) DEFAULT NULL,
+  `ID_USUARIO_ACTUALIZACION` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `tbl_usuarios_spudm`
+--
+
+INSERT INTO `tbl_usuarios_spudm` (`ID_USUARIO_SPUDM`, `NOMBRE_USUARIO`, `APELLIDOS_USUARIO`, `NUMERO_TELEFONO_USUARIO`, `NUMERO_TRABAJADOR_USUARIO`, `ID_CLIENTE_USUARIO`, `ID_AREA_USUARIO`, `ID_ESTATUS_USUARIO`, `ID_ROL_USUARIO`, `EMAIL_USUARIO`, `PASSWORD_USUARIO`, `GERENTE_AREA`, `RUTA_FOTO_USUARIO`, `FECHA_CREACION_USUARIO`, `FECHA_ACTUALIZACION_USUARIO`, `ID_USUARIO_CREADOR`, `ID_USUARIO_ACTUALIZACION`) VALUES
+(2, 'Alondra Jaquelin', 'Dominguez Garcia', '8443585204', '8596', NULL, NULL, NULL, NULL, 'alondra_dominguez@DM-CONTROL.COM.MX', '$2y$10$R7/8yEclaerelTMrMlcdXe8sdOmvnl0jrCnNQLVuGcQYswgr8ZtNm', NULL, NULL, NULL, '2026-09-14 11:09:31', NULL, NULL);
+
+--
+-- Índices para tablas volcadas
+--
+
+--
+-- Indices de la tabla `tbl_area_spudm`
+--
+ALTER TABLE `tbl_area_spudm`
+  ADD PRIMARY KEY (`ID_AREA_SPUDM`);
+
+--
+-- Indices de la tabla `tbl_direccion_trabajador_spudm`
+--
+ALTER TABLE `tbl_direccion_trabajador_spudm`
+  ADD PRIMARY KEY (`ID_DIRECCION_TRABAJADOR`);
+
+--
+-- Indices de la tabla `tbl_solicitud_spudm`
+--
+ALTER TABLE `tbl_solicitud_spudm`
+  ADD PRIMARY KEY (`ID_SOLICITUD`);
+
+--
+-- Indices de la tabla `tbl_trabajadores_spudm`
+--
+ALTER TABLE `tbl_trabajadores_spudm`
+  ADD PRIMARY KEY (`ID_TRABAJADOR_SPUDM`);
+
+--
+-- Indices de la tabla `tbl_usuarios_spudm`
+--
+ALTER TABLE `tbl_usuarios_spudm`
+  ADD PRIMARY KEY (`ID_USUARIO_SPUDM`);
+
+--
+-- AUTO_INCREMENT de las tablas volcadas
+--
+
+--
+-- AUTO_INCREMENT de la tabla `tbl_area_spudm`
+--
+ALTER TABLE `tbl_area_spudm`
+  MODIFY `ID_AREA_SPUDM` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `tbl_direccion_trabajador_spudm`
+--
+ALTER TABLE `tbl_direccion_trabajador_spudm`
+  MODIFY `ID_DIRECCION_TRABAJADOR` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `tbl_solicitud_spudm`
+--
+ALTER TABLE `tbl_solicitud_spudm`
+  MODIFY `ID_SOLICITUD` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `tbl_trabajadores_spudm`
+--
+ALTER TABLE `tbl_trabajadores_spudm`
+  MODIFY `ID_TRABAJADOR_SPUDM` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT de la tabla `tbl_usuarios_spudm`
+--
+ALTER TABLE `tbl_usuarios_spudm`
+  MODIFY `ID_USUARIO_SPUDM` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

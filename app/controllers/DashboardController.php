@@ -6,6 +6,7 @@ namespace App\Controllers;
 
 use App\Core\Auth;
 use App\Core\Controller;
+use App\Services\SolicitudService;
 
 final class DashboardController extends Controller
 {
@@ -26,9 +27,12 @@ final class DashboardController extends Controller
             return;
         }
 
+        $counts = (new SolicitudService())->dashboardCounts(Auth::user() ?? []);
+
         $this->view($view, [
             'title' => 'Panel principal',
             'pageTitle' => 'Centro de control SPUDM',
+            'counts' => $counts,
         ]);
     }
 }
