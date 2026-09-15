@@ -4,63 +4,67 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
-use App\Core\Auth;
-use App\Core\Controller;
+use App\Core\Autenticacion;
+use App\Core\BaseController;
 use App\Core\Csrf;
 use App\Services\SolicitudService;
 
-final class SolicitudController extends Controller
+final class SolicitudController extends BaseController
 {
-    public function __construct(private readonly SolicitudService $service = new SolicitudService()) {}
+    public function __construct(private readonly SolicitudService $servicio = new SolicitudService()) {}
 
-    public function index(): void
+    public function ver(): void
     {
-        $user = Auth::user() ?? [];
-        $this->view('solicitudes.index', [
+        $usuario = Autenticacion::usuario() ?? [];
+
+        $this->vista('solicitudes.ver', [
             'title' => 'Ver solicitudes',
-            'solicitudes' => $this->service->recent($user),
+            'solicitudes' => $this->servicio->solicitudesRecientes($usuario),
             'success' => $_SESSION['_flash_success'] ?? null,
         ]);
+
         unset($_SESSION['_flash_success']);
     }
 
-    public function create(): void
+    public function registrar(): void
     {
-        $this->view('solicitudes.create', [
+        $this->vista('solicitudes.registrar', [
             'title' => 'Registro de Solicitud',
-            'trabajadores' => $this->service->activeWorkers(),
-            'errors' => $_SESSION['_flash_solicitud_errors'] ?? [],
-            'old' => $_SESSION['_flash_solicitud_old'] ?? [],
+            'trabajadores' => $this->servicio->trabajadoresActivos(),
+            'errores' => $_SESSION['_flash_solicitud_errors'] ?? [],
+            'anterior' => $_SESSION['_flash_solicitud_old'] ?? [],
         ]);
+
         unset($_SESSION['_flash_solicitud_errors'], $_SESSION['_flash_solicitud_old']);
     }
 
-    public function acceptance(): void
+    public function aceptar(): void
     {
-        $this->view('solicitudes.acceptance', [
+        $this->vista('solicitudes.aceptar', [
             'title' => 'Aceptar solicitudes',
-            'solicitudes' => $this->service->pendingForAcceptance(),
+            'solicitudes' => $this->servicio->pendientesParaAceptar(),
         ]);
     }
 
-    public function store(): void
+    public function guardar(): void
     {
-        if (!Csrf::verify($_POST['_token'] ?? null)) {
+        if (!Csrf::verificar($_POST['_token'] ?? null)) {
             $_SESSION['_flash_solicitud_errors'] = [
                 'general' => 'La sesión del formulario expiró. Intenta nuevamente.',
             ];
             $_SESSION['_flash_solicitud_old'] = $_POST;
-            $this->redirect('/solicitudes/nueva');
+            $this->redireccionar('/solicitudes/nueva');
         }
 
-        $result = $this->service->create($_POST, Auth::user() ?? []);
-        if (!$result['ok']) {
-            $_SESSION['_flash_solicitud_errors'] = $result['errors'];
-            $_SESSION['_flash_solicitud_old'] = $result['old'];
-            $this->redirect('/solicitudes/nueva');
+        $resultado = $this->servicio->registrarSolicitud($_POST, Autenticacion::usuario() ?? []);
+
+        if (!$resultado['correcto']) {
+            $_SESSION['_flash_solicitud_errors'] = $resultado['errores'];
+            $_SESSION['_flash_solicitud_old'] = $resultado['anterior'];
+            $this->redireccionar('/solicitudes/nueva');
         }
 
-        $_SESSION['_flash_success'] = 'Solicitud registrada correctamente. Folio: ' . $result['folio'];
-        $this->redirect('/solicitudes');
+        $_SESSION['_flash_success'] = 'Solicitud registrada correctamente. Folio: ' . $resultado['folio'];
+        $this->redireccionar('/solicitudes');
     }
 }

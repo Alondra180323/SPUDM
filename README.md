@@ -1,61 +1,33 @@
-# SPUDM v7 - Registro conectado a `tbl_solicitud_spudm`
+# SPUDM
 
-Esta versión usa la tabla real proporcionada:
+Sistema de Programación de Unidades con arquitectura MVC en PHP.
 
-- `tbl_solicitud_spudm`
-- `tbl_usuarios_spudm`
+Esta versión reorganiza el proyecto siguiendo la estructura modular usada en SIADMC y usa nombres propios del sistema en español.
 
-## Qué guarda el formulario
+## Módulos actuales
 
-Al registrar una solicitud:
+- Autenticación.
+- Inicio por rol.
+- Solicitudes.
+- Catálogos.
+- Catálogo de trabajadores activos.
 
-- `FOLIO_SOLICITUD`: se genera automáticamente.
-- `FOLIO_VIAJE`: `NULL` hasta que exista un viaje programado.
-- `ID_TIPO_MOVIMIENTO`: `NULL` por ahora; todavía no se definió su catálogo.
-- `ID_TIPO_PROGRAMA`: Único/Fijo, mediante IDs configurables en `.env`.
-- `ID_CLIENTE`: se toma del usuario que inició sesión.
-- `ID_AREA`: se toma del usuario que inició sesión.
-- `ID_TRABAJADOR`: trabajador activo seleccionado en Select2.
-- `ID_ORIGEN`: valor capturado en Origen.
-- `ID_DESTINO`: valor capturado en Destino.
-- `ID_ESTATUS_SOLICITUD`: Pendiente al crear.
-- `unidad_asignada`: `NULL` al crear.
-- `ID_USUARIO_LABORALES`: `NULL` al crear.
-- `ID_USUARIO_PROGRAMACION`: `NULL` al crear.
-- `ID_USUARIO_SOLICITANTE`: usuario autenticado.
-- `FECHA_CREACION_CREACION`: fecha actual.
-- `HORA_CREACION_SOLICITUD`: hora actual.
+## Trabajadores activos
 
-Los campos de entrada/salida, vencimiento y cancelación permanecen `NULL` hasta la etapa correspondiente.
+El método principal es:
 
-## Configuración de IDs
-
-Copia `.env.example` a `.env` y confirma los IDs reales:
-
-```env
-ACTIVE_USER_STATUS_ID=1
-
-SOLICITUD_STATUS_PENDIENTE_ID=1
-SOLICITUD_STATUS_ESPERA_ID=2
-SOLICITUD_STATUS_PROGRAMADA_ID=3
-SOLICITUD_STATUS_REALIZADA_ID=4
-SOLICITUD_STATUS_CANCELADA_ID=5
-SOLICITUD_STATUS_VENCIDA_ID=6
-
-SOLICITUD_TIPO_PROGRAMA_UNICO_ID=1
-SOLICITUD_TIPO_PROGRAMA_FIJO_ID=2
+```php
+CatalogoModel::trabajadoresActivos()
 ```
 
-Si tus catálogos usan otros IDs, cambia solamente estos valores.
+El estatus activo se configura en `.env`:
 
-## ID_SOLICITUD
+```env
+ID_ESTATUS_USUARIO_ACTIVO=1
+```
 
-La definición compartida no muestra `PRIMARY KEY AUTO_INCREMENT` en `ID_SOLICITUD`.
-El código incluye compatibilidad temporal para calcular el siguiente ID, pero para producción es recomendable ejecutar:
+Si en tu base de datos el ID de Activo es otro, cambia únicamente ese valor.
 
-`database/03_ajustar_id_solicitud.sql`
+## Estructura
 
-## Origen y Destino
-
-La tabla define `ID_ORIGEN` e `ID_DESTINO` como `INT`. Por eso esta versión captura IDs numéricos.
-Cuando se proporcionen las tablas/catálogos reales de origen y destino, estos dos campos pueden convertirse a Select2 mostrando nombres y guardando sus IDs.
+Consulta `docs/ESTRUCTURA.md`.

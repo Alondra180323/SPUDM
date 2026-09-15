@@ -2,40 +2,41 @@
 
 declare(strict_types=1);
 
-use App\Controllers\AuthController;
-use App\Controllers\DashboardController;
+use App\Controllers\AutenticacionController;
+use App\Controllers\CatalogoController;
+use App\Controllers\InicioController;
 use App\Controllers\SolicitudController;
-use App\Core\Env;
-use App\Core\Router;
+use App\Core\Entorno;
+use App\Core\Enrutador;
 
 define('BASE_PATH', dirname(__DIR__));
 define('APP_PATH', BASE_PATH . '/app');
 
-require APP_PATH . '/core/Env.php';
-Env::load(BASE_PATH . '/.env');
+require APP_PATH . '/core/Entorno.php';
+Entorno::cargar(BASE_PATH . '/.env');
 
-spl_autoload_register(function (string $class): void {
-    if (!str_starts_with($class, 'App\\')) {
+spl_autoload_register(function (string $clase): void {
+    if (!str_starts_with($clase, 'App\\')) {
         return;
     }
 
-    $relative = substr($class, 4);
-    $segments = explode('\\', $relative);
-    $filename = array_pop($segments) . '.php';
-    $directories = array_map('lcfirst', $segments);
-    $file = APP_PATH . '/' . implode('/', $directories) . '/' . $filename;
+    $relativa = substr($clase, 4);
+    $segmentos = explode('\\', $relativa);
+    $archivo = array_pop($segmentos) . '.php';
+    $directorios = array_map('lcfirst', $segmentos);
+    $ruta = APP_PATH . '/' . implode('/', $directorios) . '/' . $archivo;
 
-    if (is_file($file)) {
-        require $file;
+    if (is_file($ruta)) {
+        require $ruta;
     }
 });
 
 require APP_PATH . '/helpers/helpers.php';
 
-$config = app_config();
-date_default_timezone_set($config['app']['timezone']);
+$configuracion = configuracion();
+date_default_timezone_set($configuracion['app']['timezone']);
 
-session_name($config['app']['session_name']);
+session_name($configuracion['app']['session_name']);
 session_set_cookie_params([
     'lifetime' => 0,
     'path' => '/',
@@ -45,17 +46,20 @@ session_set_cookie_params([
 ]);
 session_start();
 
-$router = new Router();
-$router->get('/', [AuthController::class, 'login'], ['guest']);
-$router->get('/login', [AuthController::class, 'login'], ['guest']);
-$router->post('/login', [AuthController::class, 'authenticate'], ['guest']);
-$router->post('/logout', [AuthController::class, 'logout'], ['auth']);
+$enrutador = new Enrutador();
 
-$router->get('/dashboard', [DashboardController::class, 'index'], ['auth']);
+$enrutador->get('/', [AutenticacionController::class, 'mostrarLogin'], ['guest']);
+$enrutador->get('/login', [AutenticacionController::class, 'mostrarLogin'], ['guest']);
+$enrutador->post('/login', [AutenticacionController::class, 'autenticar'], ['guest']);
+$enrutador->post('/logout', [AutenticacionController::class, 'salir'], ['auth']);
 
-$router->get('/solicitudes', [SolicitudController::class, 'index'], ['auth', 'permission:solicitudes.ver']);
-$router->get('/solicitudes/nueva', [SolicitudController::class, 'create'], ['auth', 'permission:solicitudes.crear']);
-$router->get('/solicitudes/aceptar', [SolicitudController::class, 'acceptance'], ['auth', 'permission:solicitudes.validar']);
-$router->post('/solicitudes', [SolicitudController::class, 'store'], ['auth', 'permission:solicitudes.crear']);
+$enrutador->get('/dashboard', [InicioController::class, 'inicio'], ['auth']);
 
-$router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
+$enrutador->get('/solicitudes', [SolicitudController::class, 'ver'], ['auth', 'permission:solicitudes.ver']);
+$enrutador->get('/solicitudes/nueva', [SolicitudController::class, 'registrar'], ['auth', 'permission:solicitudes.crear']);
+$enrutador->get('/solicitudes/aceptar', [SolicitudController::class, 'aceptar'], ['auth', 'permission:solicitudes.validar']);
+$enrutador->post('/solicitudes', [SolicitudController::class, 'guardar'], ['auth', 'permission:solicitudes.crear']);
+
+$enrutador->get('/catalogos/trabajadores-activos', [CatalogoController::class, 'trabajadoresActivos'], ['auth', 'permission:catalogos.ver']);
+
+$enrutador->despachar($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);

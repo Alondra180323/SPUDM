@@ -19,9 +19,9 @@ return [
         'password' => getenv('DB_PASSWORD') ?: '',
         'charset' => getenv('DB_CHARSET') ?: 'utf8mb4',
     ],
-    'users' => [
-        // Ajusta ACTIVE_USER_STATUS_ID en .env si el ID del estatus Activo es diferente.
-        'active_status_id' => (int) (getenv('ACTIVE_USER_STATUS_ID') ?: 1),
+    'usuarios' => [
+        // Recomendado: ID_ESTATUS_USUARIO_ACTIVO. Se conserva compatibilidad con ACTIVE_USER_STATUS_ID.
+        'id_estatus_activo' => (int) (getenv('ID_ESTATUS_USUARIO_ACTIVO') ?: getenv('ACTIVE_USER_STATUS_ID') ?: 1),
     ],
     'solicitudes' => [
         // IDs reales de tu catálogo de estatus de solicitud.

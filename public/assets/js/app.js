@@ -1,64 +1,50 @@
 document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('[data-password-toggle]').forEach((button) => {
-        button.addEventListener('click', () => {
-            const input = document.querySelector(button.dataset.passwordToggle);
-            if (!input) return;
+    document.querySelectorAll('[data-password-toggle]').forEach((boton) => {
+        boton.addEventListener('click', () => {
+            const entrada = document.querySelector(boton.dataset.passwordToggle);
+            if (!entrada) return;
 
-            const isPassword = input.type === 'password';
-            input.type = isPassword ? 'text' : 'password';
-            button.innerHTML = `<i class="bi ${isPassword ? 'bi-eye-slash' : 'bi-eye'}"></i>`;
-            button.setAttribute('aria-label', isPassword ? 'Ocultar contraseña' : 'Mostrar contraseña');
+            const esPassword = entrada.type === 'password';
+            entrada.type = esPassword ? 'text' : 'password';
+            boton.innerHTML = `<i class="bi ${esPassword ? 'bi-eye-slash' : 'bi-eye'}"></i>`;
+            boton.setAttribute('aria-label', esPassword ? 'Ocultar contraseña' : 'Mostrar contraseña');
         });
     });
 
-    const sidebar = document.getElementById('sidebar');
-    const toggle = document.getElementById('sidebarToggle');
-    const backdrop = document.getElementById('sidebarBackdrop');
+    const barraLateral = document.getElementById('sidebar');
+    const botonMenu = document.getElementById('sidebarToggle');
+    const fondoMenu = document.getElementById('sidebarBackdrop');
 
-    const closeSidebar = () => {
-        sidebar?.classList.remove('open');
-        backdrop?.classList.remove('show');
-        toggle?.setAttribute('aria-expanded', 'false');
+    const cerrarMenu = () => {
+        barraLateral?.classList.remove('open');
+        fondoMenu?.classList.remove('show');
+        botonMenu?.setAttribute('aria-expanded', 'false');
     };
 
-    const openSidebar = () => {
-        sidebar?.classList.add('open');
-        backdrop?.classList.add('show');
-        toggle?.setAttribute('aria-expanded', 'true');
+    const abrirMenu = () => {
+        barraLateral?.classList.add('open');
+        fondoMenu?.classList.add('show');
+        botonMenu?.setAttribute('aria-expanded', 'true');
     };
 
-    toggle?.setAttribute('aria-expanded', 'false');
-    toggle?.addEventListener('click', () => {
-        if (sidebar?.classList.contains('open')) {
-            closeSidebar();
+    botonMenu?.setAttribute('aria-expanded', 'false');
+    botonMenu?.addEventListener('click', () => {
+        if (barraLateral?.classList.contains('open')) {
+            cerrarMenu();
         } else {
-            openSidebar();
+            abrirMenu();
         }
     });
 
-    backdrop?.addEventListener('click', closeSidebar);
+    fondoMenu?.addEventListener('click', cerrarMenu);
 
-    sidebar?.querySelectorAll('a.nav-item:not(.disabled), a.nav-subitem').forEach((link) => {
-        link.addEventListener('click', () => {
-            if (window.innerWidth < 992) closeSidebar();
+    barraLateral?.querySelectorAll('a.nav-item:not(.disabled), a.nav-subitem').forEach((enlace) => {
+        enlace.addEventListener('click', () => {
+            if (window.innerWidth < 992) cerrarMenu();
         });
     });
 
     window.addEventListener('resize', () => {
-        if (window.innerWidth >= 992) closeSidebar();
+        if (window.innerWidth >= 992) cerrarMenu();
     });
-
-    if (window.jQuery && jQuery.fn.select2) {
-        jQuery('.select2-worker').select2({
-            width: '100%',
-            placeholder: function () {
-                return jQuery(this).data('placeholder') || 'Selecciona...';
-            },
-            allowClear: true,
-            language: {
-                noResults: () => 'No se encontraron trabajadores',
-                searching: () => 'Buscando...'
-            }
-        });
-    }
 });

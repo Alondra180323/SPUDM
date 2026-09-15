@@ -7,6 +7,6 @@ Options -Indexes
     RewriteRule ^\.env - [F,L]
 </IfModule>
 
-<FilesMatch "^(\.env|config\.php|permissions\.php)$">
+<FilesMatch "^(\.env|config\.php|permisos\.php)$">
     Require all denied
 </FilesMatch>

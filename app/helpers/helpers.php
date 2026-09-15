@@ -2,56 +2,66 @@
 
 declare(strict_types=1);
 
-use App\Core\Auth;
+use App\Core\Autenticacion;
 use App\Core\Csrf;
 
-function app_config(?string $key = null): mixed
+function configuracion(?string $clave = null): mixed
 {
-    static $config;
-    $config ??= require APP_PATH . '/config/config.php';
+    static $configuracion;
+    $configuracion ??= require APP_PATH . '/config/config.php';
 
-    if ($key === null) {
-        return $config;
+    if ($clave === null) {
+        return $configuracion;
     }
 
-    $segments = explode('.', $key);
-    $value = $config;
-    foreach ($segments as $segment) {
-        if (!is_array($value) || !array_key_exists($segment, $value)) {
+    $segmentos = explode('.', $clave);
+    $valor = $configuracion;
+
+    foreach ($segmentos as $segmento) {
+        if (!is_array($valor) || !array_key_exists($segmento, $valor)) {
             return null;
         }
-        $value = $value[$segment];
+        $valor = $valor[$segmento];
     }
-    return $value;
+
+    return $valor;
 }
 
-function url(string $path = ''): string
+function url(string $ruta = ''): string
 {
-    $base = rtrim((string) app_config('app.url'), '/');
-    return $base . '/' . ltrim($path, '/');
+    $base = rtrim((string) configuracion('app.url'), '/');
+    return $base . '/' . ltrim($ruta, '/');
 }
 
-function asset(string $path): string
+function recurso(string $ruta): string
 {
-    return url('assets/' . ltrim($path, '/'));
+    return url('assets/' . ltrim($ruta, '/'));
 }
 
-function e(mixed $value): string
+function escapar(mixed $valor): string
 {
-    return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
+    return htmlspecialchars((string) $valor, ENT_QUOTES, 'UTF-8');
 }
 
-function csrf_field(): string
+function campo_csrf(): string
 {
-    return '<input type="hidden" name="_token" value="' . e(Csrf::token()) . '">';
+    return '<input type="hidden" name="_token" value="' . escapar(Csrf::token()) . '">';
 }
 
-function auth_user(): ?array
+function usuario_autenticado(): ?array
 {
-    return Auth::user();
+    return Autenticacion::usuario();
 }
 
-function can(string $permission): bool
+function tiene_permiso(string $permiso): bool
 {
-    return Auth::can($permission);
+    return Autenticacion::puede($permiso);
 }
+
+/* Alias de compatibilidad para vistas existentes. */
+function app_config(?string $clave = null): mixed { return configuracion($clave); }
+function asset(string $ruta): string { return recurso($ruta); }
+function e(mixed $valor): string { return escapar($valor); }
+function csrf_field(): string { return campo_csrf(); }
+function auth_user(): ?array { return usuario_autenticado(); }
+function can(string $permiso): bool { return tiene_permiso($permiso); }
